@@ -702,7 +702,7 @@ class (MCMove):
         else:
             mechanical = n_components * np.log(volume_n / volume_o)
 
-        return np.log(zeta) < -self.beta * energetic + mechanical / self.beta
+        return np.log(zeta) < -self.beta * energetic + mechanical 
 
     def execute(self, atoms, results_o):
         energy_o, _ = self.initialize_bookkeeping(atoms, results_o)
