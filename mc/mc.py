@@ -166,12 +166,12 @@ class MonteCarlo(Dynamics):
         return {"type": "monte-carlo"}
 
     def irun(self, steps=50):
-        '''Call Dynamics.irun and adjust max_steps'''
+        """Call Dynamics.irun and adjust max_steps"""
         self.max_steps = steps + self.nsteps
         return Dynamics.irun(self, steps=steps)
 
     def run(self, steps=50):
-        '''Call Dynamics.run and adjust max_steps'''
+        """Call Dynamics.run and adjust max_steps"""
         self.max_steps = steps + self.nsteps
         return Dynamics.run(self, steps=steps)
 
