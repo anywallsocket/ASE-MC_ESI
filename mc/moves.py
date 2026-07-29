@@ -1000,14 +1000,25 @@ class Delete(MCMove):
     def generate_r_n(self, atoms, species_index_list):
         autoreject = False
 
-        # Dynamically identify connected molecules using ASE neighbor lists 
-        # instead of failing on rigid matrix reshapes
-        atom_idx = self.random_choice_from_array(species_index_list)
-        self.set_component_list(atoms)
-        mol_idxs = self.get_mol_idxs(atom_idx)
+        molecule_species_array = species_index_list.reshape((self.n_molecules, len(self.species)))
+        mol_idxs = self.random_choice_from_array(molecule_species_array)
+
+
+        #random_species_index = self.random_choice_from_array(species_index_list)
+        #mol_idxs = self.get_mol_idxs(random_species_index)
+
+        # If a mol_idxs can contain more atoms if a reaction occured or if a
+        # probe molecule adsorbed on a metal slab
+        # only delete molecules part of the species
+
+        # TEMPORARY FIX, autoreject the move if a "reaction" occured
+        #autoreject = False
+        #if len(mol_idxs) != len(self.species):
+        #    autoreject = True
 
         syms = atoms[mol_idxs].get_chemical_symbols()
         r = atoms[mol_idxs].get_positions()
+
 
         self.destroyed_atoms = Atoms(syms, r)
         for atom in self.destroyed_atoms:
@@ -1024,6 +1035,7 @@ class Delete(MCMove):
             self.ncavities = len(cavities)
             self.run_cavity_bias(hmat, self.ncavities, cavities)
 
+        # Otherwise, use metropolis sampling and pray!
         else:
             self.ln_pcav = 0  # No bias added
 
